@@ -39,11 +39,10 @@ router.get("/", (req, res, next) => {
 router.post("/personality/:twitterUsername", (req, res, next) => {
   const userName = {
     screen_name: req.params.twitterUsername,
-    count: 100
+    count: 200
   };
 
   //Get the tweets by user:
-
   twitterObj
     .get("statuses/user_timeline", userName)
     .then(stageOne => {
