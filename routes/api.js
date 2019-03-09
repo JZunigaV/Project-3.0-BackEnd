@@ -5,7 +5,7 @@ require("dotenv").config();
 // Global Variables
 let str = [];
 let textTweet = "";
-let tweetLanguage = [];
+let languageArray = [];
 let lang = "";
 
 //Twitter configuration
@@ -38,26 +38,31 @@ router.get("/", (req, res, next) => {
 // @access  Private
 router.post("/personality/:twitterUsername", (req, res, next) => {
   const userName = {
-    from: req.params.twitterUsername,
+    screen_name: req.params.twitterUsername,
     count: 100
   };
 
   //Get the tweets by user:
-  
-  twitterObj.get(
-    "statuses/user_timeline",
-    { screen_name: "PostMalone", count: 100 })
+
+  twitterObj
+    .get("statuses/user_timeline", userName)
     .then(stageOne => {
       let tweets = "";
 
-      for (let i = 0; i < stageOne.statuses.length; i++) {
-        tweets += stageOne.statuses[i].text;
-        tweetLanguage.push(stageOne.statuses[i].lang);
+      for (let i = 0; i < stageOne.length; i++) {
+        tweets += stageOne[i].text;
+        languageArray.push(stageOne[i].lang);
       }
 
-      let isEqual = tweetLanguage.every((val, i, arr) => val === arr[0]);
-      if (isEqual && !undefined) {
-        lang = tweetLanguage[0];
+      //GEt the most tweeted language 
+      let tweetLang = languageArray
+        .sort(
+          (a, b) =>
+          languageArray.filter(v => v === a).length - languageArray.filter(v => v === b).length
+        )
+        .pop();
+      if (tweetLang !== "" && !undefined) {
+        lang = tweetLang;
       } else {
         lang = "en";
       }
@@ -102,7 +107,6 @@ router.post("/personality/:twitterUsername", (req, res, next) => {
 });
 
 router.get("/tweets", (req, res) => {
-  
   // https://dev.twitter.com/rest/reference/get/statuses/user_timeline
   twitterObj.get(
     "statuses/user_timeline",
