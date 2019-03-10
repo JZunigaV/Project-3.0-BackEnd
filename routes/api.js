@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 require("dotenv").config();
 const tmdb = require("tmdbv3").init("3c5bc5cac4d9c2e29d68ab73c21b1cfb");
-const tools = require("../Util/tools.js");
 
 // Global Variables
 let str = [];
@@ -163,10 +162,65 @@ router.post("/recommendedMovies", (req, res, next) => {
       personalityInsights.profile(stageThree, (error, response) => {
         if (error) {
           res.json({ error: error });
+          return;
         } else {
-          //Aqui tendriamos que hacer el calculo para sacar las peliculas que pueden gustarle a la persona
           let recommendedMovies = [];
 
+          let moviesResult =
+            response.consumption_preferences[4].consumption_preferences;
+
+          //Aqui tendriamos que hacer el calculo para sacar las peliculas que pueden gustarle a la persona debemos ver si podemos hacer la red Neuronal
+
+          let likedGenres = moviesResult.filter(movie => movie.score === 1);
+
+          for (let i = 0; i < likedGenres.length; i++) {
+            switch (likedGenres[i].consumption_preference_id) {
+              case "consumption_preferences_movie_romance":
+                recommendedMovies.push({ name: "romance", id: 998 });
+                break;
+
+              case "consumption_preferences_movie_adventure":
+                recommendedMovies.push({ name: "adventure", id: 998 });
+                break;
+              case "consumption_preferences_movie_horror":
+                recommendedMovies.push({ name: "horror", id: 998 });
+                break;
+              case "consumption_preferences_movie_musical":
+                recommendedMovies.push({ name: "musical", id: 998 });
+                break;
+              case "consumption_preferences_movie_historical":
+                recommendedMovies.push({ name: "historical", id: 998 });
+                break;
+              case "consumption_preferences_movie_science_fiction":
+                recommendedMovies.push({ name: "scienceFiction", id: 998 });
+                break;
+              case "consumption_preferences_movie_war":
+                recommendedMovies.push({ name: "war", id: 998 });
+                break;
+              case "consumption_preferences_movie_drama":
+                recommendedMovies.push({ name: "drama", id: 998 });
+                break;
+              case "consumption_preferences_movie_action":
+                recommendedMovies.push({ name: "action", id: 998 });
+                break;
+              case "consumption_preferences_movie_documentary":
+                recommendedMovies.push({ name: "documnetary", id: 998 });
+                break;
+
+              default:
+                break;
+            }
+          }
+
+          let randomNumber = Math.floor(Math.random() * 1000) + 1;
+          tmdb.genre.list((err, categories) => console.log(categories));
+          tmdb.genre.movies("", randomNumber, (err, response) => {
+            if (!err) {
+              //Do something not error
+            } else {
+              //Do something with the error
+            }
+          });
           res.json(response.consumption_preferences[4].consumption_preferences);
         }
       });
@@ -191,12 +245,11 @@ router.get("/tweets", (req, res) => {
   );
 });
 
-router.get("/movies/:genre", (req, res) => {
-  const genre = req.params.genre;
+router.get("/movies/:genreId/page/:page", (req, res) => {
+  const genreId = req.params.genreId;
 
   tmdb.genre.list((err, response) => console.log(response));
-
-  tmdb.genre.movies("35", 4, (err, response) => {
+  tmdb.genre.movies(genreId, 4, (err, response) => {
     if (!err) {
       res.json(response);
     } else {
