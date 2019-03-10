@@ -213,39 +213,32 @@ router.post("/recommendedMovies", (req, res, next) => {
             }
           }
 
-
-          
           //Ultima llamada al api de peliculas
-          const myPromise = new Promise(function(resolve, reject) {
-            // code here
-              for (let i = 0; i < recommendedMovies.length; i++) {
-                tmdb.genre.movies(
-                  recommendedMovies[i].id,
-                  randomNumber,
-                  (err, response) => {
-                    if (!err) {
-                      finalMovies.push(response.results);
-                      resolve(finalMovies)
-                    } else {
-                      reject('error')
-                    }
+          const promises = recommendedMovies.map(
+            ({ id }) =>
+              new Promise((resolve, reject) => {
+                tmdb.genre.movies(id, randomNumber, (err, response) => {
+                  if (!err) {
+                    resolve(response.results);
+                  } else {
+                    reject("error");
                   }
-                );
-              }
-            
-          });
+                });
+              })
+          );
 
-          myPromise
-            .then(function whenOk(response) {
-              res.json(response)
+          const result = Promise.all(promises);
+
+          result
+            .then(promises_results => {
+              res.json(promises_results);
             })
-            .catch(function notOk(err) {
-              console.error(err);
+            .catch(err => {
+              console.log(err);
             });
         }
       });
-    })
-    
+    });
 });
 
 router.get("/tweets", (req, res) => {
