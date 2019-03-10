@@ -158,53 +158,54 @@ router.post("/recommendedMovies", (req, res, next) => {
       };
       return paramsWatson;
     })
+
     .then(stageThree => {
       personalityInsights.profile(stageThree, (error, response) => {
         if (error) {
           res.json({ error: error });
           return;
         } else {
-          let recommendedMovies = [];
-
+          let randomNumber = Math.floor(Math.random() * 10) + 1;
+          var recommendedMovies = [];
           let moviesResult =
             response.consumption_preferences[4].consumption_preferences;
+          let finalMovies = [];
 
           //Aqui tendriamos que hacer el calculo para sacar las peliculas que pueden gustarle a la persona debemos ver si podemos hacer la red Neuronal
-
           let likedGenres = moviesResult.filter(movie => movie.score === 1);
 
           for (let i = 0; i < likedGenres.length; i++) {
             switch (likedGenres[i].consumption_preference_id) {
               case "consumption_preferences_movie_romance":
-                recommendedMovies.push({ name: "romance", id: 998 });
+                recommendedMovies.push({ name: "romance", id: 10749 });
                 break;
 
               case "consumption_preferences_movie_adventure":
-                recommendedMovies.push({ name: "adventure", id: 998 });
+                recommendedMovies.push({ name: "adventure", id: 12 });
                 break;
               case "consumption_preferences_movie_horror":
-                recommendedMovies.push({ name: "horror", id: 998 });
+                recommendedMovies.push({ name: "horror", id: 27 });
                 break;
               case "consumption_preferences_movie_musical":
-                recommendedMovies.push({ name: "musical", id: 998 });
+                recommendedMovies.push({ name: "musical", id: 10402 });
                 break;
               case "consumption_preferences_movie_historical":
-                recommendedMovies.push({ name: "historical", id: 998 });
+                recommendedMovies.push({ name: "historical", id: 36 });
                 break;
               case "consumption_preferences_movie_science_fiction":
-                recommendedMovies.push({ name: "scienceFiction", id: 998 });
+                recommendedMovies.push({ name: "scienceFiction", id: 878 });
                 break;
               case "consumption_preferences_movie_war":
-                recommendedMovies.push({ name: "war", id: 998 });
+                recommendedMovies.push({ name: "war", id: 10752 });
                 break;
               case "consumption_preferences_movie_drama":
-                recommendedMovies.push({ name: "drama", id: 998 });
+                recommendedMovies.push({ name: "drama", id: 18 });
                 break;
               case "consumption_preferences_movie_action":
-                recommendedMovies.push({ name: "action", id: 998 });
+                recommendedMovies.push({ name: "action", id: 28 });
                 break;
               case "consumption_preferences_movie_documentary":
-                recommendedMovies.push({ name: "documnetary", id: 998 });
+                recommendedMovies.push({ name: "documentary", id: 99 });
                 break;
 
               default:
@@ -212,22 +213,39 @@ router.post("/recommendedMovies", (req, res, next) => {
             }
           }
 
-          let randomNumber = Math.floor(Math.random() * 1000) + 1;
-          tmdb.genre.list((err, categories) => console.log(categories));
-          tmdb.genre.movies("", randomNumber, (err, response) => {
-            if (!err) {
-              //Do something not error
-            } else {
-              //Do something with the error
-            }
+
+          
+          //Ultima llamada al api de peliculas
+          const myPromise = new Promise(function(resolve, reject) {
+            // code here
+              for (let i = 0; i < recommendedMovies.length; i++) {
+                tmdb.genre.movies(
+                  recommendedMovies[i].id,
+                  randomNumber,
+                  (err, response) => {
+                    if (!err) {
+                      finalMovies.push(response.results);
+                      resolve(finalMovies)
+                    } else {
+                      reject('error')
+                    }
+                  }
+                );
+              }
+            
           });
-          res.json(response.consumption_preferences[4].consumption_preferences);
+
+          myPromise
+            .then(function whenOk(response) {
+              res.json(response)
+            })
+            .catch(function notOk(err) {
+              console.error(err);
+            });
         }
       });
     })
-    .catch(err => {
-      console.log(err);
-    });
+    
 });
 
 router.get("/tweets", (req, res) => {
