@@ -10,10 +10,12 @@ const logger = require("morgan");
 const path = require("path");
 
 mongoose
-  .connect("mongodb://localhost/project30", { useNewUrlParser: true })
+  .connect("mongodb://jesus:hachi600@ds255005.mlab.com:55005/project3", {
+    useNewUrlParser: true,
+  })
   .then(x => {
     console.log(
-      `Connected to Mongo! Database name: "${x.connections[0].name}"`
+      `Connected to Mongo! Database name: "${x.connections[0].name}"`,
     );
   })
   .catch(err => {
@@ -22,7 +24,7 @@ mongoose
 
 const app_name = require("./package.json").name;
 const debug = require("debug")(
-  `${app_name}:${path.basename(__filename).split(".")[0]}`
+  `${app_name}:${path.basename(__filename).split(".")[0]}`,
 );
 
 const app = express();
@@ -34,7 +36,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept",
   );
   next();
 });
@@ -50,8 +52,8 @@ app.use(
   require("node-sass-middleware")({
     src: path.join(__dirname, "public"),
     dest: path.join(__dirname, "public"),
-    sourceMap: true
-  })
+    sourceMap: true,
+  }),
 );
 
 app.set("views", path.join(__dirname, "views"));
