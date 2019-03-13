@@ -103,7 +103,7 @@ router.post("/personality", (req, res, next) => {
     });
 });
 
-// @route   POST /api/recommendedGenres
+// @route   POST /api/recommendedMovies
 //@Params   username: Twitter username
 // @desc    Make a request to the personality insights api using the twitter userName and return the recommended movie genres
 // @access  Private
@@ -240,11 +240,18 @@ router.post("/recommendedMovies", (req, res, next) => {
     });
 });
 
-router.get("/tweets", (req, res) => {
+// @route   POST /api/tweets/:username
+//@Params   username: Twitter username
+// @desc    Make a request to the twitter api
+// @access  Private
+router.get("/tweets/:username", (req, res) => {
   // https://dev.twitter.com/rest/reference/get/statuses/user_timeline
+
+  const username = req.params.username;
+
   twitterObj.get(
     "statuses/user_timeline",
-    { screen_name: "PostMalone", count: 20 },
+    { screen_name: username, count: 20 },
     function(error, tweets, response) {
       if (!error) {
         res.status(200).json({ title: "Express", tweets: tweets });
