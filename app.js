@@ -70,14 +70,13 @@ app.use(passport.session());
 app.locals.title = "Express - Generated with IronGenerator";
 
 //Allow Cors hay que ver si metemos el middleware de la learning
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept",
-  );
-  next();
-});
+const cors = require('cors');
+
+app.use(cors({
+  credentials: true,
+  origin: ['http://localhost:3000']
+}));
+
 
 const index = require("./routes/index");
 app.use("/", index);
