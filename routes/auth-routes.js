@@ -1,12 +1,12 @@
 const express = require("express");
 const authRoutes = express.Router();
-
 const passport = require("passport");
 const bcrypt = require("bcrypt");
-
-// require the user model !!!!
 const User = require("../models/User");
 
+// @route   POST /auth/signup
+// @desc    Register a new User using name, email and password
+// @access  Public
 authRoutes.post("/signup", (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -69,6 +69,9 @@ authRoutes.post("/signup", (req, res, next) => {
   });
 });
 
+// @route   POST /auth/login
+// @desc    Login to the sisteman for a previously registered user
+// @access  Public
 authRoutes.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, theUser, failureDetails) => {
     if (err) {
@@ -98,13 +101,18 @@ authRoutes.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-//Log out
+// @route   POST /auth/logout
+// @desc    Ends the current user session
+// @access  Public
 authRoutes.post("/logout", (req, res, next) => {
   // req.logout() is defined by passport
   req.logout();
   res.status(200).json({ message: "Log out success!" });
 });
 
+// @route   POST /auth/loggedin
+// @desc    Gets the current logged user if exists
+// @access  Public
 authRoutes.get("/loggedin", (req, res, next) => {
   // req.isAuthenticated() is defined by passport
   if (req.isAuthenticated()) {
