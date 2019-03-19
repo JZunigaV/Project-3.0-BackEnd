@@ -230,7 +230,6 @@ router.post("/recommendedMovies", (req, res, next) => {
           const result = Promise.all(promises);
           result
             .then(promises_results => {
-              console.log(promises_results);
               res.status(200).json(promises_results);
             })
             .catch(err => {
