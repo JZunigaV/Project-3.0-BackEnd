@@ -35,7 +35,8 @@ router.get("/:id", (req, res) => {
 // @desc    Create or edit user profile
 // @access  Private
 router.post("/new", (req, res) => {
-  const userId = req.body.id;
+
+  let  userId = req.body.id.id;
   if (!userId) {
     return res.statusCode(400).json({ msg: "bad request" });
   }
@@ -53,12 +54,6 @@ router.post("/new", (req, res) => {
     profileFields.location = req.body.location;
   if (req.body.bio && req.body.bio.length < 281)
     profileFields.bio = req.body.bio;
-
-  //Skills - split into array ignoring extra spaces and commas
-  if (typeof req.body.skills !== "undefined")
-    profileFields.skills = req.body.skills
-      .split(/,+ *[, ]*/)
-      .filter(el => /^[A-Z\-a-z0-9 ]{1,20}$/.test(el));
 
   //Social
   profileFields.facebook = req.body.facebook;
