@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 require("dotenv").config();
 const tmdb = require("tmdbv3").init("3c5bc5cac4d9c2e29d68ab73c21b1cfb");
+const axios = require("axios");
 
 // Global Variables
 let str = [];
@@ -57,8 +58,8 @@ router.post("/personality", (req, res, next) => {
       let tweetLang = languageArray
         .sort(
           (a, b) =>
-            languageArray.filter(v => v === a).length -
-            languageArray.filter(v => v === b).length,
+          languageArray.filter(v => v === a).length -
+          languageArray.filter(v => v === b).length,
         )
         .pop();
       if (tweetLang !== "" && !undefined) {
@@ -92,7 +93,9 @@ router.post("/personality", (req, res, next) => {
     .then(stageThree => {
       personalityInsights.profile(stageThree, (error, response) => {
         if (error) {
-          res.json({ error: error });
+          res.json({
+            error: error
+          });
         } else {
           res.json(response);
         }
@@ -126,8 +129,8 @@ router.post("/recommendedMovies", (req, res, next) => {
       let tweetLang = languageArray
         .sort(
           (a, b) =>
-            languageArray.filter(v => v === a).length -
-            languageArray.filter(v => v === b).length,
+          languageArray.filter(v => v === a).length -
+          languageArray.filter(v => v === b).length,
         )
         .pop();
       if (tweetLang !== "" && !undefined) {
@@ -162,7 +165,9 @@ router.post("/recommendedMovies", (req, res, next) => {
     .then(stageThree => {
       personalityInsights.profile(stageThree, (error, response) => {
         if (error) {
-          res.json({ error: error });
+          res.json({
+            error: error
+          });
           return;
         } else {
           let randomNumber = Math.floor(Math.random() * 10) + 1;
@@ -177,35 +182,65 @@ router.post("/recommendedMovies", (req, res, next) => {
           for (let i = 0; i < likedGenres.length; i++) {
             switch (likedGenres[i].consumption_preference_id) {
               case "consumption_preferences_movie_romance":
-                recommendedMovies.push({ name: "romance", id: 10749 });
+                recommendedMovies.push({
+                  name: "romance",
+                  id: 10749
+                });
                 break;
 
               case "consumption_preferences_movie_adventure":
-                recommendedMovies.push({ name: "adventure", id: 12 });
+                recommendedMovies.push({
+                  name: "adventure",
+                  id: 12
+                });
                 break;
               case "consumption_preferences_movie_horror":
-                recommendedMovies.push({ name: "horror", id: 27 });
+                recommendedMovies.push({
+                  name: "horror",
+                  id: 27
+                });
                 break;
               case "consumption_preferences_movie_musical":
-                recommendedMovies.push({ name: "musical", id: 10402 });
+                recommendedMovies.push({
+                  name: "musical",
+                  id: 10402
+                });
                 break;
               case "consumption_preferences_movie_historical":
-                recommendedMovies.push({ name: "historical", id: 36 });
+                recommendedMovies.push({
+                  name: "historical",
+                  id: 36
+                });
                 break;
               case "consumption_preferences_movie_science_fiction":
-                recommendedMovies.push({ name: "scienceFiction", id: 878 });
+                recommendedMovies.push({
+                  name: "scienceFiction",
+                  id: 878
+                });
                 break;
               case "consumption_preferences_movie_war":
-                recommendedMovies.push({ name: "war", id: 10752 });
+                recommendedMovies.push({
+                  name: "war",
+                  id: 10752
+                });
                 break;
               case "consumption_preferences_movie_drama":
-                recommendedMovies.push({ name: "drama", id: 18 });
+                recommendedMovies.push({
+                  name: "drama",
+                  id: 18
+                });
                 break;
               case "consumption_preferences_movie_action":
-                recommendedMovies.push({ name: "action", id: 28 });
+                recommendedMovies.push({
+                  name: "action",
+                  id: 28
+                });
                 break;
               case "consumption_preferences_movie_documentary":
-                recommendedMovies.push({ name: "documentary", id: 99 });
+                recommendedMovies.push({
+                  name: "documentary",
+                  id: 99
+                });
                 break;
 
               default:
@@ -215,16 +250,30 @@ router.post("/recommendedMovies", (req, res, next) => {
 
           //Ultima llamada al api de peliculas
           const promises = recommendedMovies.map(
-            ({ id }) =>
-              new Promise((resolve, reject) => {
-                tmdb.genre.movies(id, randomNumber, (err, response) => {
-                  if (!err) {
-                    resolve(response.results);
-                  } else {
-                    reject("error");
-                  }
-                });
-              }),
+            ({
+              id
+            }) =>
+            new Promise((resolve, reject) => {
+
+
+
+              axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=3c5bc5cac4d9c2e29d68ab73c21b1cfb&language=es-LA&sort_by=popularity.desc&include_adult=false&include_video=false&page=${randomNumber}&vote_average.gte=7&with_genres=${id}`)
+              .then((movies) => {
+                resolve(movies.data.results)
+              })                
+              
+              .catch((error) => reject("error"))
+
+
+
+              // tmdb.genre.movies(id, randomNumber, (err, response) => {
+              //   if (!err) {
+              //     resolve(response.results);
+              //   } else {
+              //     reject("error");
+              //   }
+              // });
+            }),
           );
 
           const result = Promise.all(promises);
@@ -250,13 +299,20 @@ router.get("/tweets/:username", (req, res) => {
   const username = req.params.username;
 
   twitterObj.get(
-    "statuses/user_timeline",
-    { screen_name: username, count: 20 },
-    function(error, tweets, response) {
+    "statuses/user_timeline", {
+      screen_name: username,
+      count: 20
+    },
+    function (error, tweets, response) {
       if (!error) {
-        res.status(200).json({ title: "Express", tweets: tweets });
+        res.status(200).json({
+          title: "Express",
+          tweets: tweets
+        });
       } else {
-        res.status(500).json({ error: error });
+        res.status(500).json({
+          error: error
+        });
       }
     },
   );
