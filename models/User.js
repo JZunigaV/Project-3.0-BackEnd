@@ -5,7 +5,11 @@ const userSchema = new Schema(
   {
     username: String,
     email: String,
-    avatarUrl: String,
+    avatarUrl: {
+      type: String,
+      default:
+        "https://eadb.org/wp-content/uploads/2015/08/profile-placeholder.jpg",
+    },
     password: String,
   },
   {
