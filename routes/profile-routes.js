@@ -44,7 +44,7 @@ router.post("/new", (req, res) => {
   const profileFields = {};
   profileFields.user = userId;
 
-  if (!req.body.handle) {
+  if (!userId) {
     res.status(400).json({ err: "handle is required" });
   }
 
