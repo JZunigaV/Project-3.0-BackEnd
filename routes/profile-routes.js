@@ -2,9 +2,14 @@ const passport = require("passport");
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
+const parser = require("../configs/cloudinary");
+
 //Models
 const Profile = require("../models/Profile");
 const User = require("../models/User");
+
+var userIdGlobal = ""
+
 //Test Route
 router.get("/test", (req, res) => {
   return res.json({ msg: "Route working" });
@@ -15,6 +20,7 @@ router.get("/test", (req, res) => {
 // @access  Private
 router.get("/:id", (req, res) => {
   const userId = req.params.id;
+  userIdGlobal = userId;
 
   if (!userId) {
     return res.statusCode(404).json({ msg: "user not found" });
@@ -35,8 +41,7 @@ router.get("/:id", (req, res) => {
 // @desc    Create or edit user profile
 // @access  Private
 router.post("/new", (req, res) => {
-
-  let  userId = req.body.id.id;
+  let userId = req.body.id.id;
   if (!userId) {
     return res.statusCode(400).json({ msg: "bad request" });
   }
@@ -66,7 +71,7 @@ router.post("/new", (req, res) => {
         Profile.findOneAndUpdate(
           { user: userId },
           { $set: profileFields },
-          { new: true },
+          { new: true }
         )
           .then(profile => {
             res.status(200).json({ profile });
@@ -92,5 +97,26 @@ router.post("/new", (req, res) => {
     .catch(err => console.log(err));
 });
 
-//end authentication routes
+// This route finds the first user, takes the file from the request with the key 'picture' and save the 'pictureUrl'
+router.post("/pictures", parser.single("picture"), (req, res, next) => {
+
+  const userId = req.body.userId;
+
+  const profileFields = {};
+  profileFields.user = userId;
+  profileFields.avatarUrl = req.file.url
+
+  Profile.findOneAndUpdate(
+    { user: userId },
+    { $set: profileFields },
+    { new: true }
+  ).then((response) => {
+    res.json({
+      success: true,
+      pictureUrl: req.file.url
+    });
+  })
+  .catch(err => console.log(err))
+});
+
 module.exports = router;

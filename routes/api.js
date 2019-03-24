@@ -16,7 +16,7 @@ const twitterObj = new twitter({
   consumer_key: "Lim6uMrcPkBALUQgRBD1V3rfV",
   consumer_secret: "ebSngBktNp1tadIhtXXeB9iAGTHhfXIel6rT6mWakX621FInGS",
   access_token_key: "980755858563805185-IEDUsSkoU0yaVeLLD0TkffvaQfWo9ag",
-  access_token_secret: "ONJDiyRhDsMCCBMK93ErGimK5BICKpXzM8VR4EEF4JtTk",
+  access_token_secret: "ONJDiyRhDsMCCBMK93ErGimK5BICKpXzM8VR4EEF4JtTk"
 });
 
 //Personality insigths configuration
@@ -24,13 +24,13 @@ const PersonalityInsightsV3 = require("watson-developer-cloud/personality-insigh
 const personalityInsights = new PersonalityInsightsV3({
   version_date: process.env.VERSION_DATE,
   iam_apikey: process.env.IAM_API_KEY,
-  url: process.env.URL,
+  url: process.env.URL
 });
 
 /* GET home page */
 router.get("/", (req, res, next) => {
   res.json({
-    msg: "itworks",
+    msg: "itworks"
   });
 });
 
@@ -40,7 +40,7 @@ router.get("/", (req, res, next) => {
 router.post("/personality", (req, res, next) => {
   const userName = {
     screen_name: req.body.username,
-    count: 200,
+    count: 200
   };
 
   //Get the tweets by user:
@@ -58,8 +58,8 @@ router.post("/personality", (req, res, next) => {
       let tweetLang = languageArray
         .sort(
           (a, b) =>
-          languageArray.filter(v => v === a).length -
-          languageArray.filter(v => v === b).length,
+            languageArray.filter(v => v === a).length -
+            languageArray.filter(v => v === b).length
         )
         .pop();
       if (tweetLang !== "" && !undefined) {
@@ -85,8 +85,8 @@ router.post("/personality", (req, res, next) => {
         headers: {
           "accept-language": "eng",
           "Content-Language": lang,
-          accept: "application/json",
-        },
+          accept: "application/json"
+        }
       };
       return paramsWatson;
     })
@@ -113,7 +113,7 @@ router.post("/personality", (req, res, next) => {
 router.post("/recommendedMovies", (req, res, next) => {
   const userName = {
     screen_name: req.body.username,
-    count: 200,
+    count: 200
   };
 
   // //Get the tweets by user:
@@ -129,8 +129,8 @@ router.post("/recommendedMovies", (req, res, next) => {
       let tweetLang = languageArray
         .sort(
           (a, b) =>
-          languageArray.filter(v => v === a).length -
-          languageArray.filter(v => v === b).length,
+            languageArray.filter(v => v === a).length -
+            languageArray.filter(v => v === b).length
         )
         .pop();
       if (tweetLang !== "" && !undefined) {
@@ -156,8 +156,8 @@ router.post("/recommendedMovies", (req, res, next) => {
         headers: {
           "accept-language": "eng",
           "Content-Language": lang,
-          accept: "application/json",
-        },
+          accept: "application/json"
+        }
       };
       return paramsWatson;
     })
@@ -250,30 +250,26 @@ router.post("/recommendedMovies", (req, res, next) => {
 
           //Ultima llamada al api de peliculas
           const promises = recommendedMovies.map(
-            ({
-              id
-            }) =>
-            new Promise((resolve, reject) => {
+            ({ id }) =>
+              new Promise((resolve, reject) => {
+                axios
+                  .get(
+                    `https://api.themoviedb.org/3/discover/movie?api_key=3c5bc5cac4d9c2e29d68ab73c21b1cfb&language=es-LA&sort_by=popularity.desc&include_adult=false&include_video=false&page=${randomNumber}&with_genres=${id}`
+                  )
+                  .then(movies => {
+                    resolve(movies.data.results);
+                  })
 
+                  .catch(error => reject("error"));
 
-
-              axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=3c5bc5cac4d9c2e29d68ab73c21b1cfb&language=es-LA&sort_by=popularity.desc&include_adult=false&include_video=false&page=${randomNumber}&vote_average.gte=7&with_genres=${id}`)
-              .then((movies) => {
-                resolve(movies.data.results)
-              })                
-              
-              .catch((error) => reject("error"))
-
-
-
-              // tmdb.genre.movies(id, randomNumber, (err, response) => {
-              //   if (!err) {
-              //     resolve(response.results);
-              //   } else {
-              //     reject("error");
-              //   }
-              // });
-            }),
+                // tmdb.genre.movies(id, randomNumber, (err, response) => {
+                //   if (!err) {
+                //     resolve(response.results);
+                //   } else {
+                //     reject("error");
+                //   }
+                // });
+              })
           );
 
           const result = Promise.all(promises);
@@ -299,11 +295,12 @@ router.get("/tweets/:username", (req, res) => {
   const username = req.params.username;
 
   twitterObj.get(
-    "statuses/user_timeline", {
+    "statuses/user_timeline",
+    {
       screen_name: username,
       count: 20
     },
-    function (error, tweets, response) {
+    function(error, tweets, response) {
       if (!error) {
         res.status(200).json({
           title: "Express",
@@ -314,7 +311,7 @@ router.get("/tweets/:username", (req, res) => {
           error: error
         });
       }
-    },
+    }
   );
 });
 
@@ -334,7 +331,7 @@ router.get("/movies/:genreId/page/:page", (req, res) => {
 router.get("/version", (req, res, next) => {
   res.json({
     TwitterVersion: twitterObj.VERSION,
-    IbmVersion: personalityInsights.serviceVersion,
+    IbmVersion: personalityInsights.serviceVersion
   });
 });
 
