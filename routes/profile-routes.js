@@ -102,11 +102,11 @@ router.post("/pictures", parser.single("picture"), (req, res, next) => {
 
   const userId = req.body.userId;
   const profileFields = {};
-  profileFields.user = userId;
+
   profileFields.avatarUrl = req.file.url
 
-  Profile.findOneAndUpdate(
-    { user: userId },
+  User.findOneAndUpdate(
+    { _id: userId },
     { $set: profileFields },
     { new: true }
   ).then((response) => {
