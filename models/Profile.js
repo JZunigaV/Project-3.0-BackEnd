@@ -19,7 +19,14 @@ const profileSchema = new Schema(
     },
 
     favoriteMovies: {
-      type: [String],
+      type: [
+        {
+          title: { type: String, default: "" },
+          release: { type: String, default: "" },
+          overview: { type: String, default: "" },
+          background: { type: String, default: "" },
+        },
+      ],
     },
   },
   {

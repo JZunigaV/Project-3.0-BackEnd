@@ -8,7 +8,7 @@ const parser = require("../configs/cloudinary");
 const Profile = require("../models/Profile");
 const User = require("../models/User");
 
-var userIdGlobal = ""
+var userIdGlobal = "";
 
 //Test Route
 router.get("/test", (req, res) => {
@@ -71,7 +71,7 @@ router.post("/new", (req, res) => {
         Profile.findOneAndUpdate(
           { user: userId },
           { $set: profileFields },
-          { new: true }
+          { new: true },
         )
           .then(profile => {
             res.status(200).json({ profile });
@@ -81,7 +81,7 @@ router.post("/new", (req, res) => {
         //Create
 
         //Check if handle exists
-        Profile.findOne({ handle: profileFields.handle })
+        Profile.findOne({ user: userId })
           .then(profile => {
             if (profile) {
               res.status(400).json({ error: "That handle already exists" });
@@ -97,25 +97,39 @@ router.post("/new", (req, res) => {
     .catch(err => console.log(err));
 });
 
-// This route finds the first user, takes the file from the request with the key 'picture' and save the 'pictureUrl'
+// @route   POST  /profile
+// @desc    updates
+// @access  Private
 router.post("/pictures", parser.single("picture"), (req, res, next) => {
-
   const userId = req.body.userId;
   const profileFields = {};
 
-  profileFields.avatarUrl = req.file.url
+  profileFields.avatarUrl = req.file.url;
 
-  User.findOneAndUpdate(
-    { _id: userId },
-    { $set: profileFields },
-    { new: true }
-  ).then((response) => {
-    res.json({
-      success: true,
-      pictureUrl: req.file.url
+  User.findOneAndUpdate({ _id: userId }, { $set: profileFields }, { new: true })
+    .then(response => {
+      res.json({
+        success: true,
+        pictureUrl: req.file.url,
+      });
+    })
+    .catch(err => console.log(err));
+});
+
+// @route   POST  profile/favorite
+// @desc    Adds a movie to the profile,favorites
+// @access  Private
+router.post("/favorites", (req, res) => {
+  const userId = mongoose.Types.ObjectId(req.body.userId);
+  const movie = ({ title, release, overview, background } = req.body);
+
+  Profile.findOne({ user: userId })
+    .then(profile => {
+      console.log(profile);
+    })
+    .catch(err => {
+      console.log(err);
     });
-  })
-  .catch(err => console.log(err))
 });
 
 module.exports = router;
