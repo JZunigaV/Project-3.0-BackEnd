@@ -101,7 +101,6 @@ router.post("/new", (req, res) => {
 router.post("/pictures", parser.single("picture"), (req, res, next) => {
 
   const userId = req.body.userId;
-
   const profileFields = {};
   profileFields.user = userId;
   profileFields.avatarUrl = req.file.url

@@ -7,7 +7,7 @@ const axios = require("axios");
 // Global Variables
 let str = [];
 let textTweet = "";
-let languageArray = [];
+
 let lang = "";
 
 //Twitter configuration
@@ -38,6 +38,8 @@ router.get("/", (req, res, next) => {
 // @desc    Make a request to the personality insights api using the twitter userName and return the analysis
 // @access  Private
 router.post("/personality", (req, res, next) => {
+
+  let languageArray = [];
   const userName = {
     screen_name: req.body.username,
     count: 200
@@ -55,14 +57,15 @@ router.post("/personality", (req, res, next) => {
       }
 
       //GEt the most tweeted language
-      let tweetLang = languageArray
+      let tweetLang = ""
+        tweetLang = languageArray
         .sort(
           (a, b) =>
             languageArray.filter(v => v === a).length -
             languageArray.filter(v => v === b).length
         )
         .pop();
-      if (tweetLang !== "" && !undefined) {
+      if (tweetLang !== "" && tweetLang != undefined) {
         lang = tweetLang;
       } else {
         lang = "en";
@@ -111,6 +114,8 @@ router.post("/personality", (req, res, next) => {
 // @desc    Make a request to the personality insights api using the twitter userName and return the recommended movie genres
 // @access  Private
 router.post("/recommendedMovies", (req, res, next) => {
+
+  let languageArray = [];
   const userName = {
     screen_name: req.body.username,
     count: 200
@@ -126,14 +131,15 @@ router.post("/recommendedMovies", (req, res, next) => {
         languageArray.push(stageOne[i].lang);
       }
       //GEt the most tweeted language
-      let tweetLang = languageArray
+      let tweetLang = "";
+      tweetLang = languageArray
         .sort(
           (a, b) =>
             languageArray.filter(v => v === a).length -
             languageArray.filter(v => v === b).length
         )
         .pop();
-      if (tweetLang !== "" && !undefined) {
+      if (tweetLang !== "" && tweetLang != undefined) {
         lang = tweetLang;
       } else {
         lang = "en";
