@@ -116,15 +116,15 @@ router.post("/pictures", parser.single("picture"), (req, res, next) => {
     .catch(err => console.log(err));
 });
 
-// @route   POST  profile/favorite
-// @desc    Adds a movie to the profile,favorites
+// @route   POST  profile/addfavorites
+// @desc    Adds a favoritemovie to the profile
 // @access  Private
-router.post("/favorites", (req, res) => {
+router.post("/addfavorites", (req, res) => {
   
   //Get the request body
   const userId = mongoose.Types.ObjectId(req.body.userId);
-  const { title, release, overview, background } = req.body;
-  
+  const { title, release, overview, background } = req.body.movie;
+
   //Here we create the new Comment object with the data of req.body
   const newMovie = {
     title,
@@ -132,7 +132,6 @@ router.post("/favorites", (req, res) => {
     overview,
     background
   };
-
   //Query
   const query = {
       user: userId
@@ -147,15 +146,42 @@ router.post("/favorites", (req, res) => {
       new: true,
       setDefaultsOnInsert: true
     };
-    
+
   //if the document is not found, then create a new one, else update comments and push the newComment
   Profile.findOneAndUpdate(query, update, options)
   .then(movie => {
-    console.log(movie);
+    res.status(200).json({movie});
   })
   .catch(err => {
-    console.log(err);
+    res.status(400).json(err);
   });
 });
+
+
+// @route   POST  profile/favorites
+// @desc    Gets the favorite movies for the user
+// @access  Private
+router.post("/favorites",(req,res) => {
+  const userId = req.body.userId;
+  Profile.findOne({user:userId})
+  .then((favorites) => {
+    const favoriteMovies = favorites.favoriteMovies;
+    res.status(200).json({favoriteMovies})
+  })
+  .catch((err) => {
+    res.status(400).json(err)
+  })
+})
+
+
+
+
+
+
+
+
+
+
+
 
 module.exports = router;
