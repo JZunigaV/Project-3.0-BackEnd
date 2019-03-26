@@ -2,6 +2,22 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+//Section includes all other schemas
+const movieSchema = new Schema({
+  title: {
+    type: String,
+  },
+  overview: {
+    type: String,
+  },
+  background: {
+    type: String,
+  },
+  release: {
+    type: String,
+  },
+});
+
 const profileSchema = new Schema(
   {
     user: {
@@ -19,14 +35,7 @@ const profileSchema = new Schema(
     },
 
     favoriteMovies: {
-      type: [
-        {
-          title: { type: String, default: "" },
-          release: { type: String, default: "" },
-          overview: { type: String, default: "" },
-          background: { type: String, default: "" },
-        },
-      ],
+      type: [movieSchema],
     },
   },
   {

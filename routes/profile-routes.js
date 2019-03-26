@@ -123,9 +123,18 @@ router.post("/favorites", (req, res) => {
   const userId = mongoose.Types.ObjectId(req.body.userId);
   const movie = ({ title, release, overview, background } = req.body);
 
-  Profile.findOne({ user: userId })
-    .then(profile => {
-      console.log(profile);
+  Profile.findOneAndUpdate(
+    { user: userId },
+    {
+      $set: {
+        "favoriteMovies.$.title": movie.title,
+        "favoriteMovies.$.release": movie.release,
+      },
+    },
+    { new: true },
+  )
+    .then(response => {
+      console.log(response);
     })
     .catch(err => {
       console.log(err);
