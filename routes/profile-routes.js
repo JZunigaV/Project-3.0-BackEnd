@@ -71,7 +71,7 @@ router.post("/new", (req, res) => {
         Profile.findOneAndUpdate(
           { user: userId },
           { $set: profileFields },
-          { new: true }
+          { new: true },
         )
           .then(profile => {
             res.status(200).json({ profile });
@@ -110,7 +110,7 @@ router.post("/pictures", parser.single("picture"), (req, res, next) => {
     .then(response => {
       res.json({
         success: true,
-        pictureUrl: req.file.url
+        pictureUrl: req.file.url,
       });
     })
     .catch(err => console.log(err));
@@ -120,68 +120,56 @@ router.post("/pictures", parser.single("picture"), (req, res, next) => {
 // @desc    Adds a favoritemovie to the profile
 // @access  Private
 router.post("/addfavorites", (req, res) => {
-  
   //Get the request body
   const userId = mongoose.Types.ObjectId(req.body.userId);
-  const { title, release, overview, background } = req.body.movie;
+  const { title, release, overview, background, posterPath } = req.body.movie;
 
   //Here we create the new Comment object with the data of req.body
   const newMovie = {
     title,
     release,
     overview,
-    background
+    background,
+    posterPath,
   };
   //Query
   const query = {
-      user: userId
+      user: userId,
     },
     update = {
       $push: {
-        favoriteMovies: newMovie
-      }
+        favoriteMovies: newMovie,
+      },
     },
     options = {
       upsert: true,
       new: true,
-      setDefaultsOnInsert: true
+      setDefaultsOnInsert: true,
     };
 
   //if the document is not found, then create a new one, else update comments and push the newComment
   Profile.findOneAndUpdate(query, update, options)
-  .then(movie => {
-    res.status(200).json({movie});
-  })
-  .catch(err => {
-    res.status(400).json(err);
-  });
+    .then(movie => {
+      res.status(200).json({ movie });
+    })
+    .catch(err => {
+      res.status(400).json(err);
+    });
 });
-
 
 // @route   POST  profile/favorites
 // @desc    Gets the favorite movies for the user
 // @access  Private
-router.post("/favorites",(req,res) => {
+router.post("/favorites", (req, res) => {
   const userId = req.body.userId;
-  Profile.findOne({user:userId})
-  .then((favorites) => {
-    const favoriteMovies = favorites.favoriteMovies;
-    res.status(200).json({favoriteMovies})
-  })
-  .catch((err) => {
-    res.status(400).json(err)
-  })
-})
-
-
-
-
-
-
-
-
-
-
-
+  Profile.findOne({ user: userId })
+    .then(favorites => {
+      const favoriteMovies = favorites.favoriteMovies;
+      res.status(200).json({ favoriteMovies });
+    })
+    .catch(err => {
+      res.status(400).json(err);
+    });
+});
 
 module.exports = router;

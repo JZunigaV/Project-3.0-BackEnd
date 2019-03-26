@@ -6,19 +6,23 @@ const Schema = mongoose.Schema;
 const movieSchema = new Schema({
   title: {
     type: String,
-    default:"",
+    default: "",
   },
   overview: {
     type: String,
-    default:""
+    default: "",
   },
   background: {
     type: String,
-    default:""
+    default: "",
   },
   release: {
     type: String,
-    default:""
+    default: "",
+  },
+  posterPath: {
+    type: String,
+    default: "",
   },
 });
 
