@@ -6,15 +6,19 @@ const Schema = mongoose.Schema;
 const movieSchema = new Schema({
   title: {
     type: String,
+    default:"",
   },
   overview: {
     type: String,
+    default:""
   },
   background: {
     type: String,
+    default:""
   },
   release: {
     type: String,
+    default:""
   },
 });
 
