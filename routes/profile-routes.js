@@ -3,12 +3,9 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const parser = require("../configs/cloudinary");
-
 //Models
 const Profile = require("../models/Profile");
 const User = require("../models/User");
-
-var userIdGlobal = "";
 
 //Test Route
 router.get("/test", (req, res) => {
@@ -105,7 +102,6 @@ router.post("/pictures", parser.single("picture"), (req, res, next) => {
   const profileFields = {};
 
   profileFields.avatarUrl = req.file.url;
-
   User.findOneAndUpdate({ _id: userId }, { $set: profileFields }, { new: true })
     .then(response => {
       res.json({
@@ -122,7 +118,9 @@ router.post("/pictures", parser.single("picture"), (req, res, next) => {
 router.post("/addfavorites", (req, res) => {
   //Get the request body
   const userId = mongoose.Types.ObjectId(req.body.userId);
-  const { title, release, overview, background, posterPath } = req.body.movie;
+  let { title, release, overview, background, posterPath } = req.body.movie;
+
+  background = `http://image.tmdb.org/t/p/original/${background}`;
 
   //Here we create the new Comment object with the data of req.body
   const newMovie = {
