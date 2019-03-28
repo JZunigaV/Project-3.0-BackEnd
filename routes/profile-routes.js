@@ -68,7 +68,7 @@ router.post("/new", (req, res) => {
         Profile.findOneAndUpdate(
           { user: userId },
           { $set: profileFields },
-          { new: true }
+          { new: true },
         )
           .then(profile => {
             res.status(200).json({ profile });
@@ -106,7 +106,7 @@ router.post("/pictures", parser.single("picture"), (req, res, next) => {
     .then(response => {
       res.json({
         success: true,
-        pictureUrl: req.file.url
+        pictureUrl: req.file.url,
       });
     })
     .catch(err => console.log(err));
@@ -128,21 +128,21 @@ router.post("/addfavorites", (req, res) => {
     release,
     overview,
     background,
-    posterPath
+    posterPath,
   };
   //Query
   const query = {
-      user: userId
+      user: userId,
     },
     update = {
       $push: {
-        favoriteMovies: newMovie
-      }
+        favoriteMovies: newMovie,
+      },
     },
     options = {
       upsert: true,
       new: true,
-      setDefaultsOnInsert: true
+      setDefaultsOnInsert: true,
     };
 
   //if the document is not found, then create a new one, else update comments and push the newComment
@@ -159,19 +159,19 @@ router.post("/addfavorites", (req, res) => {
 // @desc    deletes a favorite movie from the profile
 // @access  Private
 router.post("/deletefavorites", (req, res) => {
-  // Profile.update({_id:movieId},{$pullAll:{}})
-  const movieId = req.body.movieId;
-  const userId = req.body.userId;
+  const movieId = mongoose.Types.ObjectId(req.body.movie._id);
+  const userId = mongoose.Types.ObjectId(req.body.userId.id);
 
-  Profile.update(
-    { $pull: { favoriteMovies: movieId } },
-    { multi: true }
+  Profile.findOneAndUpdate(
+    { user: userId },
+    { $pull: { favoriteMovies: { _id: movieId } } },
+    { safe: true, upsert: true },
   )
-    .then(movies => {
-      console.log(movies);
+    .then(value => {
+      res.status(200).json({ value });
     })
     .catch(err => {
-      console.log(err);
+      res.status(400).json({ err });
     });
 });
 
@@ -179,7 +179,7 @@ router.post("/deletefavorites", (req, res) => {
 // @desc    Gets the favorite movies for the user
 // @access  Private
 router.post("/favorites", (req, res) => {
-  const userId = req.body.userId;
+  const userId = mongoose.Types.ObjectId(req.body.userId);
   Profile.findOne({ user: userId })
     .then(favorites => {
       const favoriteMovies = favorites.favoriteMovies;

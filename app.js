@@ -4,12 +4,11 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const express = require("express");
 const favicon = require("serve-favicon");
-const hbs = require("hbs");
 const mongoose = require("mongoose");
 const logger = require("morgan");
 const path = require("path");
-
 const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
 const passport = require("passport");
 require("./configs/passport");
 
@@ -57,9 +56,14 @@ app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
 
 app.use(
   session({
-    secret: "some secret goes here",
+    secret: "asdasdasdasdasdasd",
     resave: true,
     saveUninitialized: true,
+    cookie: { maxAge: 60000 },
+    store: new MongoStore({
+      mongooseConnection: mongoose.connection,
+      ttl: 24 * 60 * 60, // 1 day
+    }),
   }),
 );
 
