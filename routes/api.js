@@ -3,13 +3,8 @@ const router = express.Router();
 require("dotenv").config();
 const tmdb = require("tmdbv3").init("3c5bc5cac4d9c2e29d68ab73c21b1cfb");
 const axios = require("axios");
-
 // Global Variables
-let str = [];
-let textTweet = "";
-
 let lang = "";
-
 //Twitter configuration
 const twitter = require("twitter");
 const twitterObj = new twitter({

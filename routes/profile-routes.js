@@ -71,7 +71,7 @@ router.post("/new", (req, res) => {
         Profile.findOneAndUpdate(
           { user: userId },
           { $set: profileFields },
-          { new: true },
+          { new: true }
         )
           .then(profile => {
             res.status(200).json({ profile });
@@ -110,7 +110,7 @@ router.post("/pictures", parser.single("picture"), (req, res, next) => {
     .then(response => {
       res.json({
         success: true,
-        pictureUrl: req.file.url,
+        pictureUrl: req.file.url
       });
     })
     .catch(err => console.log(err));
@@ -130,21 +130,21 @@ router.post("/addfavorites", (req, res) => {
     release,
     overview,
     background,
-    posterPath,
+    posterPath
   };
   //Query
   const query = {
-      user: userId,
+      user: userId
     },
     update = {
       $push: {
-        favoriteMovies: newMovie,
-      },
+        favoriteMovies: newMovie
+      }
     },
     options = {
       upsert: true,
       new: true,
-      setDefaultsOnInsert: true,
+      setDefaultsOnInsert: true
     };
 
   //if the document is not found, then create a new one, else update comments and push the newComment
@@ -154,6 +154,26 @@ router.post("/addfavorites", (req, res) => {
     })
     .catch(err => {
       res.status(400).json(err);
+    });
+});
+
+// @route   POST  profile/deletefavorites
+// @desc    deletes a favorite movie from the profile
+// @access  Private
+router.post("/deletefavorites", (req, res) => {
+  // Profile.update({_id:movieId},{$pullAll:{}})
+  const movieId = req.body.movieId;
+  const userId = req.body.userId;
+
+  Profile.update(
+    { $pull: { favoriteMovies: movieId } },
+    { multi: true }
+  )
+    .then(movies => {
+      console.log(movies);
+    })
+    .catch(err => {
+      console.log(err);
     });
 });
 
