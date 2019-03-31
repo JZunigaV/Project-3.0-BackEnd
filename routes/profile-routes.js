@@ -50,15 +50,11 @@ router.post("/new", (req, res) => {
     res.status(400).json({ err: "handle is required" });
   }
 
-  if (req.body.handle && /^[A-Za-z0-9_\-]{1,20}/.test(req.body.handle))
-    profileFields.handle = req.body.handle;
-  if (req.body.location && req.body.location.length < 100)
-    profileFields.location = req.body.location;
   if (req.body.bio && req.body.bio.length < 281)
     profileFields.bio = req.body.bio;
 
   //Social
-  profileFields.facebook = req.body.facebook;
+ 
   profileFields.twitter = req.body.twitter;
 
   Profile.findOne({ user: userId })
