@@ -136,10 +136,7 @@ authRoutes.post("/updateTwitter", (req, res) => {
     { new: true }
   )
     .then(response => {
-      res.json({
-        success: true,
-        pictureUrl: req.file.url
-      });
+      res.status(200).json(response);
     })
     .catch(err => console.log(err));
 });
