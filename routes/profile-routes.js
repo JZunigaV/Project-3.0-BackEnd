@@ -38,6 +38,8 @@ router.get("/:id", (req, res) => {
 // @desc    Create or edit user profile
 // @access  Private
 router.post("/new", (req, res) => {
+
+  console.log(req.body);
   let userId = req.body.id.id;
   if (!userId) {
     return res.status(400).json({ msg: "bad request" });
