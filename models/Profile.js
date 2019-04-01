@@ -32,16 +32,15 @@ const profileSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    location: {
-      type: String,
-    },
-    skills: {
-      type: [String],
-    },
+    
     bio: {
       type: String,
     },
-
+    social: {
+      twitter: {
+        type: String
+      },
+    },
     favoriteMovies: {
       type: [movieSchema],
     },

@@ -20,7 +20,7 @@ authRoutes.post("/signup", (req, res, next) => {
   if (password.length < 7) {
     res.status(400).json({
       message:
-        "Please make your password at least 8 characters long for security purposes.",
+        "Please make your password at least 8 characters long for security purposes."
     });
     return;
   }
@@ -42,7 +42,7 @@ authRoutes.post("/signup", (req, res, next) => {
     const aNewUser = new User({
       username: username,
       password: hashPass,
-      email: email,
+      email: email
     });
 
     aNewUser.save(err => {
@@ -120,6 +120,25 @@ authRoutes.get("/loggedin", (req, res, next) => {
     return;
   }
   res.status(403).json({ message: "Unauthorized" });
+});
+
+// @route   POST /auth/updateTwitter
+// @desc    Gets the current logged user if exists
+// @access  Public
+authRoutes.post("/updateTwitter", (req, res) => {
+  
+  const userId = req.body.userId;
+  const twitterUsername = req.body.twitterUsername;
+
+  User.findOneAndUpdate(
+    { _id: userId },
+    { $set: { twitterUsername: twitterUsername } },
+    { new: true }
+  )
+    .then(response => {
+      res.status(200).json(response);
+    })
+    .catch(err => console.log(err));
 });
 
 module.exports = authRoutes;

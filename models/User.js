@@ -11,6 +11,12 @@ const userSchema = new Schema(
         "https://eadb.org/wp-content/uploads/2015/08/profile-placeholder.jpg",
     },
     password: String,
+    twitterUsername:{
+
+      type:String,
+      default:""
+
+    }
   },
   {
     timestamps: {

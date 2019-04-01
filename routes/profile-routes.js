@@ -20,7 +20,7 @@ router.get("/:id", (req, res) => {
   userIdGlobal = userId;
 
   if (!userId) {
-    return res.statusCode(404).json({ msg: "user not found" });
+    return res.status(404).json({ msg: "user not found" });
   }
   Profile.findOne({ user: userId })
     .populate("user", ["username", "avatarUrl", "id"])
@@ -38,9 +38,11 @@ router.get("/:id", (req, res) => {
 // @desc    Create or edit user profile
 // @access  Private
 router.post("/new", (req, res) => {
+
+  console.log(req.body);
   let userId = req.body.id.id;
   if (!userId) {
-    return res.statusCode(400).json({ msg: "bad request" });
+    return res.status(400).json({ msg: "bad request" });
   }
 
   const profileFields = {};
@@ -50,18 +52,16 @@ router.post("/new", (req, res) => {
     res.status(400).json({ err: "handle is required" });
   }
 
-  if (req.body.handle && /^[A-Za-z0-9_\-]{1,20}/.test(req.body.handle))
-    profileFields.handle = req.body.handle;
-  if (req.body.location && req.body.location.length < 100)
-    profileFields.location = req.body.location;
   if (req.body.bio && req.body.bio.length < 281)
     profileFields.bio = req.body.bio;
 
   //Social
-  profileFields.facebook = req.body.facebook;
-  profileFields.twitter = req.body.twitter;
-
+  profileFields.social = {}
+  profileFields.social.twitter = req.body.twitterUsername;
   Profile.findOne({ user: userId })
+
+
+
     .then(profile => {
       if (profile) {
         //Update
