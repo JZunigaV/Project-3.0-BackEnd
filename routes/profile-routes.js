@@ -20,7 +20,7 @@ router.get("/:id", (req, res) => {
   userIdGlobal = userId;
 
   if (!userId) {
-    return res.statusCode(404).json({ msg: "user not found" });
+    return res.status(404).json({ msg: "user not found" });
   }
   Profile.findOne({ user: userId })
     .populate("user", ["username", "avatarUrl", "id"])
@@ -40,7 +40,7 @@ router.get("/:id", (req, res) => {
 router.post("/new", (req, res) => {
   let userId = req.body.id.id;
   if (!userId) {
-    return res.statusCode(400).json({ msg: "bad request" });
+    return res.status(400).json({ msg: "bad request" });
   }
 
   const profileFields = {};
@@ -54,10 +54,12 @@ router.post("/new", (req, res) => {
     profileFields.bio = req.body.bio;
 
   //Social
- 
-  profileFields.twitter = req.body.twitter;
-
+  profileFields.social = {}
+  profileFields.social.twitter = req.body.twitterUsername;
   Profile.findOne({ user: userId })
+
+
+
     .then(profile => {
       if (profile) {
         //Update
