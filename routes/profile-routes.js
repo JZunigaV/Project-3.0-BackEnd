@@ -38,7 +38,6 @@ router.get("/:id", (req, res) => {
 // @desc    Create or edit user profile
 // @access  Private
 router.post("/new", (req, res) => {
-
   console.log(req.body);
   let userId = req.body.id.id;
   if (!userId) {
@@ -56,11 +55,9 @@ router.post("/new", (req, res) => {
     profileFields.bio = req.body.bio;
 
   //Social
-  profileFields.social = {}
+  profileFields.social = {};
   profileFields.social.twitter = req.body.twitterUsername;
   Profile.findOne({ user: userId })
-
-
 
     .then(profile => {
       if (profile) {
@@ -159,8 +156,8 @@ router.post("/addfavorites", (req, res) => {
 // @desc    deletes a favorite movie from the profile
 // @access  Private
 router.post("/deletefavorites", (req, res) => {
-  const movieId = mongoose.Types.ObjectId(req.body.movie._id);
-  const userId = mongoose.Types.ObjectId(req.body.userId.id);
+  const movieId = mongoose.Types.ObjectId(req.body.movie);
+  const userId = mongoose.Types.ObjectId(req.body.userId);
 
   Profile.findOneAndUpdate(
     { user: userId },
