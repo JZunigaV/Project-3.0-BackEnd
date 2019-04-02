@@ -188,7 +188,6 @@ router.post("/favorites", (req, res) => {
 router.post("/info", (req, res) => {
   const movieTitle = req.body.movieTitle;
   const movieRelease = req.body.movieRelease;
-
   const lol = new JustWatch({ locale: "es_MX" });
   lol
     .search({ query: movieTitle, release_year_from: movieRelease })

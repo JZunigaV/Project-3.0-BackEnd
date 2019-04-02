@@ -11,7 +11,7 @@ const twitterObj = new twitter({
   consumer_key: "Lim6uMrcPkBALUQgRBD1V3rfV",
   consumer_secret: "ebSngBktNp1tadIhtXXeB9iAGTHhfXIel6rT6mWakX621FInGS",
   access_token_key: "980755858563805185-IEDUsSkoU0yaVeLLD0TkffvaQfWo9ag",
-  access_token_secret: "ONJDiyRhDsMCCBMK93ErGimK5BICKpXzM8VR4EEF4JtTk"
+  access_token_secret: "ONJDiyRhDsMCCBMK93ErGimK5BICKpXzM8VR4EEF4JtTk",
 });
 
 //Personality insigths configuration
@@ -19,13 +19,13 @@ const PersonalityInsightsV3 = require("watson-developer-cloud/personality-insigh
 const personalityInsights = new PersonalityInsightsV3({
   version_date: process.env.VERSION_DATE,
   iam_apikey: process.env.IAM_API_KEY,
-  url: process.env.URL
+  url: process.env.URL,
 });
 
 /* GET home page */
 router.get("/", (req, res, next) => {
   res.json({
-    msg: "itworks"
+    msg: "itworks",
   });
 });
 
@@ -33,11 +33,10 @@ router.get("/", (req, res, next) => {
 // @desc    Make a request to the personality insights api using the twitter userName and return the analysis
 // @access  Private
 router.post("/personality", (req, res, next) => {
-
   let languageArray = [];
   const userName = {
     screen_name: req.body.username,
-    count: 200
+    count: 200,
   };
 
   //Get the tweets by user:
@@ -52,12 +51,12 @@ router.post("/personality", (req, res, next) => {
       }
 
       //GEt the most tweeted language
-      let tweetLang = ""
-        tweetLang = languageArray
+      let tweetLang = "";
+      tweetLang = languageArray
         .sort(
           (a, b) =>
             languageArray.filter(v => v === a).length -
-            languageArray.filter(v => v === b).length
+            languageArray.filter(v => v === b).length,
         )
         .pop();
       if (tweetLang !== "" && tweetLang != undefined) {
@@ -83,8 +82,8 @@ router.post("/personality", (req, res, next) => {
         headers: {
           "accept-language": "eng",
           "Content-Language": lang,
-          accept: "application/json"
-        }
+          accept: "application/json",
+        },
       };
       return paramsWatson;
     })
@@ -92,7 +91,7 @@ router.post("/personality", (req, res, next) => {
       personalityInsights.profile(stageThree, (error, response) => {
         if (error) {
           res.json({
-            error: error
+            error: error,
           });
         } else {
           res.json(response);
@@ -109,11 +108,10 @@ router.post("/personality", (req, res, next) => {
 // @desc    Make a request to the personality insights api using the twitter userName and return the recommended movie genres
 // @access  Private
 router.post("/recommendedMovies", (req, res, next) => {
-
   let languageArray = [];
   const userName = {
     screen_name: req.body.username,
-    count: 200
+    count: 200,
   };
 
   // //Get the tweets by user:
@@ -131,7 +129,7 @@ router.post("/recommendedMovies", (req, res, next) => {
         .sort(
           (a, b) =>
             languageArray.filter(v => v === a).length -
-            languageArray.filter(v => v === b).length
+            languageArray.filter(v => v === b).length,
         )
         .pop();
       if (tweetLang !== "" && tweetLang != undefined) {
@@ -157,8 +155,8 @@ router.post("/recommendedMovies", (req, res, next) => {
         headers: {
           "accept-language": "eng",
           "Content-Language": lang,
-          accept: "application/json"
-        }
+          accept: "application/json",
+        },
       };
       return paramsWatson;
     })
@@ -167,7 +165,7 @@ router.post("/recommendedMovies", (req, res, next) => {
       personalityInsights.profile(stageThree, (error, response) => {
         if (error) {
           res.json({
-            error: error
+            error: error,
           });
           return;
         } else {
@@ -185,62 +183,62 @@ router.post("/recommendedMovies", (req, res, next) => {
               case "consumption_preferences_movie_romance":
                 recommendedMovies.push({
                   name: "romance",
-                  id: 10749
+                  id: 10749,
                 });
                 break;
 
               case "consumption_preferences_movie_adventure":
                 recommendedMovies.push({
                   name: "adventure",
-                  id: 12
+                  id: 12,
                 });
                 break;
               case "consumption_preferences_movie_horror":
                 recommendedMovies.push({
                   name: "horror",
-                  id: 27
+                  id: 27,
                 });
                 break;
               case "consumption_preferences_movie_musical":
                 recommendedMovies.push({
                   name: "musical",
-                  id: 10402
+                  id: 10402,
                 });
                 break;
               case "consumption_preferences_movie_historical":
                 recommendedMovies.push({
                   name: "historical",
-                  id: 36
+                  id: 36,
                 });
                 break;
               case "consumption_preferences_movie_science_fiction":
                 recommendedMovies.push({
                   name: "scienceFiction",
-                  id: 878
+                  id: 878,
                 });
                 break;
               case "consumption_preferences_movie_war":
                 recommendedMovies.push({
                   name: "war",
-                  id: 10752
+                  id: 10752,
                 });
                 break;
               case "consumption_preferences_movie_drama":
                 recommendedMovies.push({
                   name: "drama",
-                  id: 18
+                  id: 18,
                 });
                 break;
               case "consumption_preferences_movie_action":
                 recommendedMovies.push({
                   name: "action",
-                  id: 28
+                  id: 28,
                 });
                 break;
               case "consumption_preferences_movie_documentary":
                 recommendedMovies.push({
                   name: "documentary",
-                  id: 99
+                  id: 99,
                 });
                 break;
 
@@ -255,22 +253,13 @@ router.post("/recommendedMovies", (req, res, next) => {
               new Promise((resolve, reject) => {
                 axios
                   .get(
-                    `https://api.themoviedb.org/3/discover/movie?api_key=3c5bc5cac4d9c2e29d68ab73c21b1cfb&language=es-LA&sort_by=popularity.desc&include_adult=false&include_video=false&page=${randomNumber}&with_genres=${id}`
+                    `https://api.themoviedb.org/3/discover/movie?api_key=3c5bc5cac4d9c2e29d68ab73c21b1cfb&language=es-LA&sort_by=popularity.desc&include_adult=false&include_video=false&page=${randomNumber}&with_genres=${id}`,
                   )
                   .then(movies => {
                     resolve(movies.data.results);
                   })
-
                   .catch(error => reject("error"));
-
-                // tmdb.genre.movies(id, randomNumber, (err, response) => {
-                //   if (!err) {
-                //     resolve(response.results);
-                //   } else {
-                //     reject("error");
-                //   }
-                // });
-              })
+              }),
           );
 
           const result = Promise.all(promises);
@@ -299,20 +288,20 @@ router.get("/tweets/:username", (req, res) => {
     "statuses/user_timeline",
     {
       screen_name: username,
-      count: 20
+      count: 20,
     },
     function(error, tweets, response) {
       if (!error) {
         res.status(200).json({
           title: "Express",
-          tweets: tweets
+          tweets: tweets,
         });
       } else {
         res.status(500).json({
-          error: error
+          error: error,
         });
       }
-    }
+    },
   );
 });
 
@@ -332,7 +321,7 @@ router.get("/movies/:genreId/page/:page", (req, res) => {
 router.get("/version", (req, res, next) => {
   res.json({
     TwitterVersion: twitterObj.VERSION,
-    IbmVersion: personalityInsights.serviceVersion
+    IbmVersion: personalityInsights.serviceVersion,
   });
 });
 
