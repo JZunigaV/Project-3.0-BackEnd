@@ -38,19 +38,12 @@ router.get("/:id", (req, res) => {
 // @desc    Create or edit user profile
 // @access  Private
 router.post("/new", (req, res) => {
-  console.log(req.body);
-  let userId = req.body.id.id;
+  let userId = mongoose.Types.ObjectId(req.body.id);
   if (!userId) {
     return res.status(400).json({ msg: "bad request" });
   }
-
   const profileFields = {};
   profileFields.user = userId;
-
-  if (!userId) {
-    res.status(400).json({ err: "handle is required" });
-  }
-
   if (req.body.bio && req.body.bio.length < 281)
     profileFields.bio = req.body.bio;
 
@@ -74,7 +67,7 @@ router.post("/new", (req, res) => {
       } else {
         //Create
 
-        //Check if handle exists
+        //Check if user exists
         Profile.findOne({ user: userId })
           .then(profile => {
             if (profile) {
