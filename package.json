@@ -20,6 +20,7 @@
     "express-session": "^1.15.6",
     "hbs": "^4.0.1",
     "imdb-api": "^4.0.2",
+    "justwatch-api": "^1.0.6",
     "mongoose": "^5.2.10",
     "morgan": "^1.9.0",
     "moviedb": "^0.2.10",

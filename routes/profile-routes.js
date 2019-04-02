@@ -3,6 +3,8 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const parser = require("../configs/cloudinary");
+const JustWatch = require("justwatch-api");
+
 //Models
 const Profile = require("../models/Profile");
 const User = require("../models/User");
@@ -178,6 +180,17 @@ router.post("/favorites", (req, res) => {
     .catch(err => {
       res.status(400).json(err);
     });
+});
+
+// @route   POST  profile/info
+// @desc    Gets the service where to watch a movie
+// @access  Private
+router.post("/info", (req, res) => {
+  const movieTitle = req.body.movieTitle;
+  const lol = new JustWatch({ locale: "es_MX" });
+  lol.search(movieTitle).then(movies => {
+    res.status(200).json(movies);
+  });
 });
 
 module.exports = router;
