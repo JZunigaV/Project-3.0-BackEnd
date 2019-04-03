@@ -188,11 +188,23 @@ router.post("/favorites", (req, res) => {
 router.post("/info", (req, res) => {
   const movieTitle = req.body.movieTitle;
   const movieRelease = req.body.movieRelease;
-  const lol = new JustWatch({ locale: "es_MX" });
-  lol
+  const watchObj = new JustWatch({ locale: "es_MX" });
+  watchObj
     .search({ query: movieTitle, release_year_from: movieRelease })
     .then(movies => {
       res.status(200).json(movies.items[0]);
+    });
+});
+
+router.post("/providers", (req, res) => {
+  const watch = new JustWatch({ locale: "es_MX" });
+  watch
+    .getProviders()
+    .then(providers => {
+      res.status(200).json(providers);
+    })
+    .catch(err => {
+      res.status(400).json(err);
     });
 });
 
