@@ -9,6 +9,20 @@ const JustWatch = require("justwatch-api");
 const Profile = require("../models/Profile");
 const User = require("../models/User");
 
+//Twitter configuration
+
+const twitter = require("twitter");
+const twitterObj = new twitter({
+  consumer_key: "nRPZ6UgsCsbxL5wQtO79DFnaI",
+  consumer_secret: "gt7bZA26GlQviZd1miXNAhquLyBrwzHTTCFZ9JfeAKYDayBRQy",
+  access_token_key: "90670132-wWnXubi7sDsokijLd5MagF51Fi2EJj01wPrmXicmz",
+  access_token_secret: "bj1Q48nbWZUJLs8NsCMHMPOZm31BqE2YjL12GJdlDbxdT",
+  // consumer_key: "Lim6uMrcPkBALUQgRBD1V3rfV",
+  // consumer_secret: "ebSngBktNp1tadIhtXXeB9iAGTHhfXIel6rT6mWakX621FInGS",
+  // access_token_key: "980755858563805185-IEDUsSkoU0yaVeLLD0TkffvaQfWo9ag",
+  // access_token_secret: "ONJDiyRhDsMCCBMK93ErGimK5BICKpXzM8VR4EEF4JtTk",
+});
+
 //Test Route
 router.get("/test", (req, res) => {
   return res.json({ msg: "Route working" });
@@ -52,38 +66,52 @@ router.post("/new", (req, res) => {
   //Social
   profileFields.social = {};
   profileFields.social.twitter = req.body.twitterUsername;
-  Profile.findOne({ user: userId })
 
-    .then(profile => {
-      if (profile) {
-        //Update
-        Profile.findOneAndUpdate(
-          { user: userId },
-          { $set: profileFields },
-          { new: true },
-        )
-          .then(profile => {
-            res.status(200).json({ profile });
-          })
-          .catch(err => res.status(400).json({ errors: err }));
-      } else {
-        //Create
+  //Check if the twitter handle exits
+  twitterObj
+    .get(
+      `https://api.twitter.com/1.1/users/show.json?screen_name=${
+        req.body.twitterUsername
+      }`,
+      false,
+    )
+    .then(twitterUser => {
+      Profile.findOne({ user: userId })
 
-        //Check if user exists
-        Profile.findOne({ user: userId })
-          .then(profile => {
-            if (profile) {
-              res.status(400).json({ error: "That handle already exists" });
-            }
-            //Save Profile
-            new Profile(profileFields).save().then(profile => {
-              res.status(200).json({ profile });
-            });
-          })
-          .catch(err => console.log(err));
-      }
+        .then(profile => {
+          if (profile) {
+            //Update
+            Profile.findOneAndUpdate(
+              { user: userId },
+              { $set: profileFields },
+              { new: true },
+            )
+              .then(profile => {
+                res.status(200).json({ profile });
+              })
+              .catch(err => res.status(400).json({ errors: err }));
+          } else {
+            //Create
+
+            //Check if user exists
+            Profile.findOne({ user: userId })
+              .then(profile => {
+                if (profile) {
+                  res.status(400).json({ error: "That handle already exists" });
+                }
+                //Save Profile
+                new Profile(profileFields).save().then(profile => {
+                  res.status(200).json({ profile });
+                });
+              })
+              .catch(err => console.log(err));
+          }
+        })
+        .catch(err => console.log(err));
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      res.status(400).json(err);
+    });
 });
 
 // @route   POST  /profile

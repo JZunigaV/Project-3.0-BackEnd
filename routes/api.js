@@ -8,10 +8,14 @@ let lang = "";
 //Twitter configuration
 const twitter = require("twitter");
 const twitterObj = new twitter({
-  consumer_key: "Lim6uMrcPkBALUQgRBD1V3rfV",
-  consumer_secret: "ebSngBktNp1tadIhtXXeB9iAGTHhfXIel6rT6mWakX621FInGS",
-  access_token_key: "980755858563805185-IEDUsSkoU0yaVeLLD0TkffvaQfWo9ag",
-  access_token_secret: "ONJDiyRhDsMCCBMK93ErGimK5BICKpXzM8VR4EEF4JtTk",
+  consumer_key: "nRPZ6UgsCsbxL5wQtO79DFnaI",
+  consumer_secret: "gt7bZA26GlQviZd1miXNAhquLyBrwzHTTCFZ9JfeAKYDayBRQy",
+  access_token_key: "90670132-wWnXubi7sDsokijLd5MagF51Fi2EJj01wPrmXicmz",
+  access_token_secret: "bj1Q48nbWZUJLs8NsCMHMPOZm31BqE2YjL12GJdlDbxdT",
+  // consumer_key: "Lim6uMrcPkBALUQgRBD1V3rfV",
+  // consumer_secret: "ebSngBktNp1tadIhtXXeB9iAGTHhfXIel6rT6mWakX621FInGS",
+  // access_token_key: "980755858563805185-IEDUsSkoU0yaVeLLD0TkffvaQfWo9ag",
+  // access_token_secret: "ONJDiyRhDsMCCBMK93ErGimK5BICKpXzM8VR4EEF4JtTk",
 });
 
 //Personality insigths configuration
