@@ -16,7 +16,7 @@ const twitterObj = new twitter({
   consumer_key: "nRPZ6UgsCsbxL5wQtO79DFnaI",
   consumer_secret: "gt7bZA26GlQviZd1miXNAhquLyBrwzHTTCFZ9JfeAKYDayBRQy",
   access_token_key: "90670132-wWnXubi7sDsokijLd5MagF51Fi2EJj01wPrmXicmz",
-  access_token_secret: "bj1Q48nbWZUJLs8NsCMHMPOZm31BqE2YjL12GJdlDbxdT",
+  access_token_secret: "bj1Q48nbWZUJLs8NsCMHMPOZm31BqE2YjL12GJdlDbxdT"
   // consumer_key: "Lim6uMrcPkBALUQgRBD1V3rfV",
   // consumer_secret: "ebSngBktNp1tadIhtXXeB9iAGTHhfXIel6rT6mWakX621FInGS",
   // access_token_key: "980755858563805185-IEDUsSkoU0yaVeLLD0TkffvaQfWo9ag",
@@ -64,54 +64,90 @@ router.post("/new", (req, res) => {
     profileFields.bio = req.body.bio;
 
   //Social
-  profileFields.social = {};
-  profileFields.social.twitter = req.body.twitterUsername;
+  if (req.body.twitterUsername) {
+    profileFields.social = {};
+    profileFields.social.twitter = req.body.twitterUsername;
+    //Check if the twitter handle exits
+    twitterObj
+      .get(
+        `https://api.twitter.com/1.1/users/show.json?screen_name=${
+          req.body.twitterUsername
+        }`,
+        false
+      )
+      .then(twitterUser => {
+        Profile.findOne({ user: userId })
 
-  //Check if the twitter handle exits
-  twitterObj
-    .get(
-      `https://api.twitter.com/1.1/users/show.json?screen_name=${
-        req.body.twitterUsername
-      }`,
-      false,
-    )
-    .then(twitterUser => {
-      Profile.findOne({ user: userId })
-
-        .then(profile => {
-          if (profile) {
-            //Update
-            Profile.findOneAndUpdate(
-              { user: userId },
-              { $set: profileFields },
-              { new: true },
-            )
-              .then(profile => {
-                res.status(200).json({ profile });
-              })
-              .catch(err => res.status(400).json({ errors: err }));
-          } else {
-            //Create
-
-            //Check if user exists
-            Profile.findOne({ user: userId })
-              .then(profile => {
-                if (profile) {
-                  res.status(400).json({ error: "That handle already exists" });
-                }
-                //Save Profile
-                new Profile(profileFields).save().then(profile => {
+          .then(profile => {
+            if (profile) {
+              //Update
+              Profile.findOneAndUpdate(
+                { user: userId },
+                { $set: profileFields },
+                { new: true }
+              )
+                .then(profile => {
                   res.status(200).json({ profile });
-                });
-              })
-              .catch(err => console.log(err));
-          }
-        })
-        .catch(err => console.log(err));
-    })
-    .catch(err => {
-      res.status(400).json(err);
-    });
+                })
+                .catch(err => res.status(400).json({ msg: err }));
+            } else {
+              //Create
+
+              //Check if user exists
+              Profile.findOne({ user: userId })
+                .then(profile => {
+                  if (profile) {
+                    res
+                      .status(400)
+                      .json({ error: "That handle already exists" });
+                  }
+                  //Save Profile
+                  new Profile(profileFields).save().then(profile => {
+                    res.status(200).json({ profile });
+                  });
+                })
+                .catch(err => console.log(err));
+            }
+          })
+          .catch(err => console.log(err));
+      })
+      .catch(err => {
+        res.status(400).json({msg:"El usuario de twitter no existe"});
+      });
+  } else {
+    Profile.findOne({ user: userId })
+
+      .then(profile => {
+        if (profile) {
+          //Update
+          Profile.findOneAndUpdate(
+            { user: userId },
+            { $set: profileFields },
+            { new: true }
+          )
+            .then(profile => {
+              res.status(200).json({ profile });
+            })
+            .catch(err => res.status(400).json({ msg: err }));
+        } else {
+          //Create
+
+          //Check if user exists
+          Profile.findOne({ user: userId })
+            .then(profile => {
+              if (profile) {
+                res.status(400).json({ msg: "That handle already exists" });
+              }
+              //Save Profile
+              new Profile(profileFields).save().then(profile => {
+                res.status(200).json({ profile });
+              });
+            })
+            .catch(err => console.log(err));
+        }
+      })
+      .catch(err => console.log(err));
+  }
 });
 
 // @route   POST  /profile
@@ -126,7 +162,7 @@ router.post("/pictures", parser.single("picture"), (req, res, next) => {
     .then(response => {
       res.json({
         success: true,
-        pictureUrl: req.file.url,
+        pictureUrl: req.file.url
       });
     })
     .catch(err => console.log(err));
@@ -148,21 +184,21 @@ router.post("/addfavorites", (req, res) => {
     release,
     overview,
     background,
-    posterPath,
+    posterPath
   };
   //Query
   const query = {
-      user: userId,
+      user: userId
     },
     update = {
       $push: {
-        favoriteMovies: newMovie,
-      },
+        favoriteMovies: newMovie
+      }
     },
     options = {
       upsert: true,
       new: true,
-      setDefaultsOnInsert: true,
+      setDefaultsOnInsert: true
     };
 
   //if the document is not found, then create a new one, else update comments and push the newComment
@@ -185,7 +221,7 @@ router.post("/deletefavorites", (req, res) => {
   Profile.findOneAndUpdate(
     { user: userId },
     { $pull: { favoriteMovies: { _id: movieId } } },
-    { safe: true, upsert: true },
+    { safe: true, upsert: true }
   )
     .then(value => {
       res.status(200).json({ value });
@@ -202,8 +238,13 @@ router.post("/favorites", (req, res) => {
   const userId = mongoose.Types.ObjectId(req.body.userId);
   Profile.findOne({ user: userId })
     .then(favorites => {
+      if (favorites) {              
       const favoriteMovies = favorites.favoriteMovies;
       res.status(200).json({ favoriteMovies });
+      }else{
+        return
+      }
+      
     })
     .catch(err => {
       res.status(400).json(err);

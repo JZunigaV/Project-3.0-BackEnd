@@ -146,7 +146,7 @@ router.post("/recommendedMovies", (req, res, next) => {
       return (textTweet = tweets);
     })
     .catch(err => {
-      console.log(err);
+       res.status(404).json(err);
     })
 
     //Watson Request
@@ -163,6 +163,9 @@ router.post("/recommendedMovies", (req, res, next) => {
         },
       };
       return paramsWatson;
+    })
+    .catch(err => {
+      console.log(err)
     })
 
     .then(stageThree => {
