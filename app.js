@@ -13,7 +13,7 @@ const passport = require("passport");
 require("./configs/passport");
 
 mongoose
-  .connect("mongodb://jesus:hachi600@ds255005.mlab.com:55005/project3", {
+  .connect(process.env.MONGO_DB, {
     useNewUrlParser: true,
   })
   .then(x => {

@@ -1,17 +1,17 @@
 const express = require("express");
 const router = express.Router();
 require("dotenv").config();
-const tmdb = require("tmdbv3").init("3c5bc5cac4d9c2e29d68ab73c21b1cfb");
+const tmdb = require("tmdbv3").init(process.env.TMDB_TOKEN);
 const axios = require("axios");
 // Global Variables
 let lang = "";
 //Twitter configuration
 const twitter = require("twitter");
 const twitterObj = new twitter({
-  consumer_key: "nRPZ6UgsCsbxL5wQtO79DFnaI",
-  consumer_secret: "gt7bZA26GlQviZd1miXNAhquLyBrwzHTTCFZ9JfeAKYDayBRQy",
-  access_token_key: "90670132-wWnXubi7sDsokijLd5MagF51Fi2EJj01wPrmXicmz",
-  access_token_secret: "bj1Q48nbWZUJLs8NsCMHMPOZm31BqE2YjL12GJdlDbxdT",
+  consumer_key: process.env.CONSUMER_KEY,
+  consumer_secret: process.env.CONSUMER_SECRET,
+  access_token_key: process.env.ACCESS_TOKEN_KEY,
+  access_token_secret: process.env.ACCESS_TOKEN_SECRET,
   // consumer_key: "Lim6uMrcPkBALUQgRBD1V3rfV",
   // consumer_secret: "ebSngBktNp1tadIhtXXeB9iAGTHhfXIel6rT6mWakX621FInGS",
   // access_token_key: "980755858563805185-IEDUsSkoU0yaVeLLD0TkffvaQfWo9ag",
