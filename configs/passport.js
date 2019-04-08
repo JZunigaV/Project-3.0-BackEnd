@@ -21,17 +21,18 @@ passport.use(
   new LocalStrategy((username, password, next) => {
     User.findOne({ username }, (err, foundUser) => {
       if (err) {
+        console.log(err)
         next(err);
         return;
       }
 
       if (!foundUser) {
-        next(null, false, { message: "Incorrect username." });
+        next(null, false, { message: "Nombre de usuario o password incorrectos." });
         return;
       }
 
       if (!bcrypt.compareSync(password, foundUser.password)) {
-        next(null, false, { message: "Incorrect password." });
+        next(null, false, { message: "Nombre de usuario o password incorrectos." });
         return;
       }
 

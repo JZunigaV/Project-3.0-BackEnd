@@ -13,14 +13,14 @@ authRoutes.post("/signup", (req, res, next) => {
   const email = req.body.email;
 
   if (!username || !password || !email) {
-    res.status(400).json({ message: "Provide username,password and email" });
+    res.status(400).json({ message: "Proporcione Usuario,Email y password" });
     return;
   }
 
   if (password.length < 7) {
     res.status(400).json({
       message:
-        "Please make your password at least 8 characters long for security purposes."
+        "El password debe tener al menos 8 caracteres."
     });
     return;
   }
@@ -32,7 +32,7 @@ authRoutes.post("/signup", (req, res, next) => {
     }
 
     if (foundUser) {
-      res.status(400).json({ message: "Username taken. Choose another one." });
+      res.status(400).json({ message: "El usuario ya existe, elija otro por favor." });
       return;
     }
 
@@ -49,7 +49,7 @@ authRoutes.post("/signup", (req, res, next) => {
       if (err) {
         res
           .status(400)
-          .json({ message: "Saving user to database went wrong." });
+          .json({ message: "Hubo un error al guardar en la base de datos" });
         return;
       }
 
@@ -57,7 +57,7 @@ authRoutes.post("/signup", (req, res, next) => {
       // .login() here is actually predefined passport method
       req.login(aNewUser, err => {
         if (err) {
-          res.status(500).json({ message: "Login after signup went bad." });
+          res.status(500).json({ message: "No se pudó logear despúes del registro" });
           return;
         }
 
@@ -77,7 +77,7 @@ authRoutes.post("/login", (req, res, next) => {
     if (err) {
       res
         .status(500)
-        .json({ message: "Something went wrong authenticating user" });
+        .json({ message: "No se pudo autenticar" });
       return;
     }
 
@@ -91,7 +91,7 @@ authRoutes.post("/login", (req, res, next) => {
     // save user in session
     req.login(theUser, err => {
       if (err) {
-        res.status(500).json({ message: "Session save went bad." });
+        res.status(500).json({ message: "La sesión no se guardó correctamente." });
         return;
       }
 
@@ -107,7 +107,7 @@ authRoutes.post("/login", (req, res, next) => {
 authRoutes.post("/logout", (req, res, next) => {
   // req.logout() is defined by passport
   req.logout();
-  res.status(200).json({ message: "Log out success!" });
+  res.status(200).json({ message: "Se s!" });
 });
 
 // @route   POST /auth/loggedin
@@ -119,7 +119,7 @@ authRoutes.get("/loggedin", (req, res, next) => {
     res.status(200).json(req.user);
     return;
   }
-  res.status(403).json({ message: "Unauthorized" });
+  res.status(403).json({ message: "Sin autorización para ver esta página" });
 });
 
 // @route   POST /auth/updateTwitter

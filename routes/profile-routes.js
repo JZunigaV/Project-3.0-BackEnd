@@ -242,7 +242,7 @@ router.post("/favorites", (req, res) => {
       const favoriteMovies = favorites.favoriteMovies;
       res.status(200).json({ favoriteMovies });
       }else{
-        return
+        res.status(200).json({ "msg": "no hay favoritas aun" });
       }
       
     })
