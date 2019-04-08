@@ -12,10 +12,6 @@ const twitterObj = new twitter({
   consumer_secret: process.env.CONSUMER_SECRET,
   access_token_key: process.env.ACCESS_TOKEN_KEY,
   access_token_secret: process.env.ACCESS_TOKEN_SECRET,
-  // consumer_key: "Lim6uMrcPkBALUQgRBD1V3rfV",
-  // consumer_secret: "ebSngBktNp1tadIhtXXeB9iAGTHhfXIel6rT6mWakX621FInGS",
-  // access_token_key: "980755858563805185-IEDUsSkoU0yaVeLLD0TkffvaQfWo9ag",
-  // access_token_secret: "ONJDiyRhDsMCCBMK93ErGimK5BICKpXzM8VR4EEF4JtTk",
 });
 
 //Personality insigths configuration
@@ -84,7 +80,7 @@ router.post("/personality", (req, res, next) => {
         consumption_preferences: true,
         raw_scores: true,
         headers: {
-          "accept-language": "eng",
+          "accept-language": "es",
           "Content-Language": lang,
           accept: "application/json",
         },
@@ -146,7 +142,7 @@ router.post("/recommendedMovies", (req, res, next) => {
       return (textTweet = tweets);
     })
     .catch(err => {
-       res.status(404).json(err);
+      res.status(404).json(err);
     })
 
     //Watson Request
@@ -165,7 +161,7 @@ router.post("/recommendedMovies", (req, res, next) => {
       return paramsWatson;
     })
     .catch(err => {
-      console.log(err)
+      console.log(err);
     })
 
     .then(stageThree => {
