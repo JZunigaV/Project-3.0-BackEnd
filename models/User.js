@@ -7,16 +7,13 @@ const userSchema = new Schema(
     email: String,
     avatarUrl: {
       type: String,
-      default:
-        "https://eadb.org/wp-content/uploads/2015/08/profile-placeholder.jpg",
+      default: "",
     },
     password: String,
-    twitterUsername:{
-
-      type:String,
-      default:""
-
-    }
+    twitterUsername: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: {

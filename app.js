@@ -79,10 +79,8 @@ const cors = require("cors");
 app.use(
   cors({
     credentials: true,
-    origin: [
-      "https://tweetflick-front.herokuapp.com",
-      "https://eadb.org/cgi-sys/suspendedpage.cgi",
-    ],
+    origin: ["http://localhost:3000"],
+    // origin:["https://tweetflick-front.herokuapp.com"]
   }),
 );
 
