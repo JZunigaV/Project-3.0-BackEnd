@@ -79,7 +79,7 @@ const cors = require("cors");
 app.use(
   cors({
     credentials: true,
-    origin: ["https://tweetflick-front.herokuapp.com/"],
+    origin: ["https://tweetflick-front.herokuapp.com"],
   }),
 );
 
