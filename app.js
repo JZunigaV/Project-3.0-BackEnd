@@ -76,13 +76,7 @@ app.locals.title = "Express - Generated with IronGenerator";
 //Allow Cors hay que ver si metemos el middleware de la learning
 const cors = require("cors");
 
-app.use(
-  cors({
-    credentials: true,
-    origin: ["http://localhost:3000"],
-    // origin:["https://tweetflick-front.herokuapp.com"]
-  }),
-);
+app.use(cors({ credentials: true, origin: true }));
 
 const index = require("./routes/index");
 app.use("/", index);
