@@ -172,7 +172,7 @@ router.post("/recommendedMovies", (req, res, next) => {
           });
           return;
         } else {
-          let randomNumber = Math.floor(Math.random() * 12) + 1;
+          let randomNumber = Math.floor(Math.random() * 10) + 1;
           var recommendedMovies = [];
           let moviesResult =
             response.consumption_preferences[4].consumption_preferences;
@@ -256,7 +256,7 @@ router.post("/recommendedMovies", (req, res, next) => {
               new Promise((resolve, reject) => {
                 axios
                   .get(
-                    `https://api.themoviedb.org/3/discover/movie?api_key=3c5bc5cac4d9c2e29d68ab73c21b1cfb&language=es-LA&sort_by=popularity.desc&include_adult=false&include_video=true&page=${randomNumber}&with_genres=${id}`,
+                    `https://api.themoviedb.org/3/discover/movie?api_key=3c5bc5cac4d9c2e29d68ab73c21b1cfb&language=es_MX&sort_by=popularity.desc&include_adult=false&include_video=false&page=${randomNumber}&with_genres=${id}`,
                   )
                   .then(movies => {
                     resolve(movies.data.results);
