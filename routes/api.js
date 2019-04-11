@@ -256,7 +256,7 @@ router.post("/recommendedMovies", (req, res, next) => {
               new Promise((resolve, reject) => {
                 axios
                   .get(
-                    `https://api.themoviedb.org/3/discover/movie?api_key=3c5bc5cac4d9c2e29d68ab73c21b1cfb&language=es_LA&sort_by=popularity.desc&include_adult=false&include_video=false&page=${randomNumber}&with_genres=${id}`,
+                    `https://api.themoviedb.org/3/discover/movie?api_key=3c5bc5cac4d9c2e29d68ab73c21b1cfb&language=es-LA&sort_by=popularity.desc&include_adult=false&include_video=false&page=${randomNumber}&with_genres=${id}`,
                   )
                   .then(movies => {
                     resolve(movies.data.results);
