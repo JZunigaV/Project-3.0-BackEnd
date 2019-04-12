@@ -161,7 +161,7 @@ router.post("/pictures", parser.single("picture"), (req, res, next) => {
         pictureUrl: req.file.url,
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => res.status(400).json({ err }));
 });
 
 // @route   POST  profile/addfavorites
