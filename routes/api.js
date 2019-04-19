@@ -172,7 +172,7 @@ router.post("/recommendedMovies", (req, res, next) => {
           });
           return;
         } else {
-          let randomNumber = Math.floor(Math.random() * 5) + 1;
+          let randomNumber = Math.floor(Math.random() * 6) + 1;
           var recommendedMovies = [];
           let moviesResult =
             response.consumption_preferences[4].consumption_preferences;
