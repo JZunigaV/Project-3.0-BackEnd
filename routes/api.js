@@ -250,16 +250,15 @@ router.post("/recommendedMovies", (req, res, next) => {
           }
 
           //Ultima llamada al api de peliculas
-          if (recommendedMovies.length === 1) {
-            for (let i = 0; i < 3; i++) {              
-              recommendedMovies.push(recommendedMovies[0]);  
-            }
+          let numbers = [];
+          if (recommendedMovies.length === 1) {                         
+              recommendedMovies.push(recommendedMovies[0]);              
           }
           const promises = recommendedMovies.map(
             ({ id }) =>
               new Promise((resolve, reject) => {
                 //Use a random number for the movie page we are showing (we are making sure that the number doesn't repeat itself)
-                let numbers = [];
+               
                 let randomNumber;
                 do {
                   randomNumber = Math.floor(Math.random() * 6) + 1;
