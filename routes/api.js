@@ -250,21 +250,15 @@ router.post("/recommendedMovies", (req, res, next) => {
           }
 
           //Ultima llamada al api de peliculas
-          let numbers = [];
+         
           if (recommendedMovies.length === 1) {                         
               recommendedMovies.push(recommendedMovies[0]);              
           }
           const promises = recommendedMovies.map(
             ({ id }) =>
               new Promise((resolve, reject) => {
-                //Use a random number for the movie page we are showing (we are making sure that the number doesn't repeat itself)
-               
-                let randomNumber;
-                do {
-                  randomNumber = Math.floor(Math.random() * 6) + 1;
-                } while (numbers.includes(randomNumber));
-                numbers.push(randomNumber);
-
+                //Use a random number for the movie page we are showing (we are making sure that the number doesn't repeat itself)               
+                let randomNumber = Math.floor(Math.random() * 6) + 1;            
                 //Axios call
                 axios
                   .get(
